@@ -11,6 +11,9 @@ module dexlyn_clmm::position_nft {
     use aptos_token_objects::property_map;
     use aptos_token_objects::token;
     use std::signer;
+    use std::signer::address_of;
+    use supra_framework::object::owner;
+    use aptos_token_objects::token::Token;
 
     const KEY_INDEX: vector<u8> = b"index";
     const KEY_TOKEN_BURNABLE_BY_CREATOR: vector<u8> = b"TOKEN_BURNABLE_BY_CREATOR";
@@ -133,7 +136,7 @@ module dexlyn_clmm::position_nft {
 
         // Create token with Digital Asset Standard
         let constructor_ref = token::create_named_token(
-            receiver,
+            creator,
             collection_name,
             token_description,
             token_name,
@@ -142,6 +145,9 @@ module dexlyn_clmm::position_nft {
         );
 
         property_map::init(&constructor_ref, property_map::prepare_input(vector[], vector[], vector[]));
+        let add = object::address_from_constructor_ref(&constructor_ref);
+        let token = object::address_to_object<Token>(add);
+        object::transfer(creator,token, address_of(receiver));
         
         let object_signer = object::generate_signer(&constructor_ref);
         let mutator_ref = token::generate_mutator_ref(&constructor_ref);
@@ -162,6 +168,7 @@ module dexlyn_clmm::position_nft {
         // print(&utf8(b"Object Signer in mint"));
         // print(&object_signer);
         // Store PositionNFT resource at the object address (no transfer needed)
+        let object_signer = object::generate_signer(&constructor_ref);
         move_to(&object_signer, PositionNFT {
             mutator_ref,
             burn_ref,
