@@ -25,7 +25,7 @@ module dexlyn_clmm::remove_liquidity_test {
 
     #[test(
         supra_framework = @supra_framework,
-        admin = @dexlyn_clmm,
+        admin = @dexlyn_clmm, // 0xa7f01413d33ba919441888637ca1607ca0ddcbfa3c0a9ddea64743aaa560e498
     )]
     public entry fun test_remove_liquidity_basic(admin: &signer, supra_framework: &signer) {
         account::create_account_for_test(signer::address_of(admin));

@@ -50,15 +50,17 @@ module dexlyn_clmm::position_nft {
         pool_index: u64,
         position_index: u64
     ): bool {
-        // print(&utf8(b"Print token name and adddress in is_position_nft_owner function"));
+        print(&utf8(b"=====>Print token name and adddress in [is_position_nft_owner] function"));
+        print(&utf8(b"Owner address: "));
+        print(&owner);
         let token_name = position_name(pool_index, position_index);
-        // print(&token_name);
         let token_address = token::create_token_address(
             &owner,
             &collection_name,
             &token_name
         );
-        print(&utf8(b"Token address in is_position_nft_owner function"));
+        print(&collection_name);
+        print(&token_name);
         print(&token_address);
         exists<PositionNFT>(token_address)
     }
@@ -94,7 +96,7 @@ module dexlyn_clmm::position_nft {
 
     #[view]
     public fun collection_name<CoinA, CoinB>(tick: u64): String {
-        let name = string::utf8(b"Dexlyn Position | ");
+        let name = string::utf8(b"Cetus Position | ");
         string::append(&mut name, coin::symbol<CoinA>());
         string::append_utf8(&mut name, b"-");
         string::append(&mut name, coin::symbol<CoinB>());
@@ -112,23 +114,26 @@ module dexlyn_clmm::position_nft {
         uri: String,
         collection_name: String
     ) {
+
         let token_name = position_name(index, position_index);
         let token_description = string::utf8(b"Dexlyn CLMM Position NFT");
         let royalty = option::none();
 
-        // print(&utf8(b"Print Token address and name in Mint function"));
+        print(&utf8(b"=====>Print Token address and name in [Mint] function"));
+        print(&utf8(b"Receiver address: "));
+        print(&signer::address_of(receiver));
         let token_address = token::create_token_address(
             &signer::address_of(receiver),
             &collection_name,
             &token_name
         );
+        print(&collection_name);
+        print(&token_name);
         print(&token_address);
-        // print(&token_name);
-        // print(&collection_name);
 
         // Create token with Digital Asset Standard
         let constructor_ref = token::create_named_token(
-            creator,
+            receiver,
             collection_name,
             token_description,
             token_name,
@@ -154,8 +159,8 @@ module dexlyn_clmm::position_nft {
             bcs::to_bytes(&true)
         );
 
-        print(&utf8(b"Object Signer in mint"));
-        print(&object_signer);
+        // print(&utf8(b"Object Signer in mint"));
+        // print(&object_signer);
         // Store PositionNFT resource at the object address (no transfer needed)
         move_to(&object_signer, PositionNFT {
             mutator_ref,
@@ -175,7 +180,7 @@ module dexlyn_clmm::position_nft {
 
     #[view]
     public fun position_name(index: u64, position_index: u64): String {
-        let name = string::utf8(b"Dexlyn LP | Pool");
+        let name = string::utf8(b"Cetus LP | Pool");
         string::append(&mut name, dexlyn_clmm::utils::str(index));
         string::append_utf8(&mut name, b"-");
         string::append(&mut name, dexlyn_clmm::utils::str(position_index));
