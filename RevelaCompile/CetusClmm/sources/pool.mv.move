@@ -1290,7 +1290,10 @@ module dexlyn_clmm::pool {
             new_empty_position(pool_address, tick_lower_index, tick_upper_index, pool.position_index)
         );
         let signer_cap = account::create_signer_with_capability(&pool.signer_cap);
-        position_nft::mint(account,&signer_cap,pool.index, pool.position_index, pool.uri, pool.collection_name);
+
+        // position_nft::mint(account,&signer_cap,pool.index, pool.position_index, pool.uri, pool.collection_name);
+        position_nft::mint(&signer_cap,account,pool.index, pool.position_index, pool.uri, pool.collection_name);
+        
         let open_position_event = OpenPositionEvent {
             user: signer::address_of(account),
             pool: pool_address,

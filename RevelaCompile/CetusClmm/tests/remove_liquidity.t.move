@@ -7,6 +7,7 @@ module dexlyn_clmm::remove_liquidity_test {
     use supra_framework::account;
     use supra_framework::coin;
     use supra_framework::timestamp;
+    use aptos_token_objects::token;
 
     use dexlyn_clmm::clmm_router::{
         add_fee_tier,
