@@ -1,0 +1,32 @@
+[package]
+name = 'DexlynIntegrate'
+version = '1.0.0'
+
+[addresses]
+std = "0x1"
+aptos_std = "0x1"
+dexlyn_integrate = "0xa7f01413d33ba919441888637ca1607ca0ddcbfa3c0a9ddea64743aaa560e498"
+dexlyn_clmm = "0xa7f01413d33ba919441888637ca1607ca0ddcbfa3c0a9ddea64743aaa560e498"
+
+# [dependencies.SupraFramework]
+# git = 'https://github.com/Entropy-Foundation/aptos-core.git'
+# subdir = 'aptos-move/framework/supra-framework'
+# rev = 'aptosvm-v1.16_supra-v0.4.0'
+
+[dependencies.AptosToken]
+git = 'https://github.com/Entropy-Foundation/aptos-core.git'
+subdir = 'aptos-move/framework/aptos-token'
+rev = 'aptosvm-v1.16_supra-v0.4.0'
+
+# [dependencies.AptosFramework]
+# git = 'https://github.com/aptos-labs/aptos-core.git'
+# subdir = 'aptos-move/framework/aptos-framework'
+# rev = "testnet"
+
+# [dependencies.AptosStdlib]
+# git = "https://github.com/aptos-labs/aptos-core.git"
+# subdir = "aptos-move/framework/aptos-stdlib"
+# rev = "testnet"
+
+[dependencies.CetusClmm]
+local = "../CetusClmm"
