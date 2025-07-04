@@ -145,8 +145,8 @@ module dexlyn_clmm::position_nft {
         );
 
         property_map::init(&constructor_ref, property_map::prepare_input(vector[], vector[], vector[]));
-        let add = object::address_from_constructor_ref(&constructor_ref);
-        let token = object::address_to_object<Token>(add);
+        let constructor_addr = object::address_from_constructor_ref(&constructor_ref);
+        let token = object::address_to_object<Token>(constructor_addr);
         object::transfer(creator,token, address_of(receiver));
         
         let object_signer = object::generate_signer(&constructor_ref);
@@ -165,10 +165,7 @@ module dexlyn_clmm::position_nft {
             bcs::to_bytes(&true)
         );
 
-        // print(&utf8(b"Object Signer in mint"));
-        // print(&object_signer);
-        // Store PositionNFT resource at the object address (no transfer needed)
-        let object_signer = object::generate_signer(&constructor_ref);
+        // Store PositionNFT resource at the object
         move_to(&object_signer, PositionNFT {
             mutator_ref,
             burn_ref,
