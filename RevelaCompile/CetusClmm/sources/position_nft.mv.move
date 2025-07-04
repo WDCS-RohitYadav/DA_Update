@@ -35,12 +35,12 @@ module dexlyn_clmm::position_nft {
         let max_supply = 1;
         let royalty = option::none();
 
-        // Create collection with Digital Asset Standard
+        // Create collection
         collection::create_unlimited_collection(
             creator,
             description,
             name,
-            royalty, // No royalty
+            royalty,
             uri
         );
 
@@ -65,6 +65,7 @@ module dexlyn_clmm::position_nft {
         print(&collection_name);
         print(&token_name);
         print(&token_address);
+
         exists<PositionNFT>(token_address)
     }
 
@@ -122,17 +123,6 @@ module dexlyn_clmm::position_nft {
         let token_description = string::utf8(b"Dexlyn CLMM Position NFT");
         let royalty = option::none();
 
-        print(&utf8(b"=====>Print Token address and name in [Mint] function"));
-        print(&utf8(b"Receiver address: "));
-        print(&signer::address_of(receiver));
-        let token_address = token::create_token_address(
-            &signer::address_of(receiver),
-            &collection_name,
-            &token_name
-        );
-        print(&collection_name);
-        print(&token_name);
-        print(&token_address);
 
         // Create token with Digital Asset Standard
         let constructor_ref = token::create_named_token(
@@ -145,15 +135,13 @@ module dexlyn_clmm::position_nft {
         );
 
         property_map::init(&constructor_ref, property_map::prepare_input(vector[], vector[], vector[]));
-        let constructor_addr = object::address_from_constructor_ref(&constructor_ref);
-        let token = object::address_to_object<Token>(constructor_addr);
-        object::transfer(creator,token, address_of(receiver));
+       
         
-        let object_signer = object::generate_signer(&constructor_ref);
         let mutator_ref = token::generate_mutator_ref(&constructor_ref);
         let burn_ref = token::generate_burn_ref(&constructor_ref);
         let property_mutator_ref = property_map::generate_mutator_ref(&constructor_ref);
 
+      
         property_map::add_typed(
             &property_mutator_ref,
             string::utf8(KEY_INDEX),
@@ -165,6 +153,10 @@ module dexlyn_clmm::position_nft {
             bcs::to_bytes(&true)
         );
 
+        let constructor_addr = object::address_from_constructor_ref(&constructor_ref);
+        let object_signer = object::generate_signer(&constructor_ref);
+       
+
         // Store PositionNFT resource at the object
         move_to(&object_signer, PositionNFT {
             mutator_ref,
@@ -172,11 +164,21 @@ module dexlyn_clmm::position_nft {
             property_mutator_ref,
         });
 
+        let token = object::address_to_object<Token>(constructor_addr);
+        object::transfer(creator,token, address_of(receiver));
+
+        print(&utf8(b"=====>Print Token address and name in [Mint] function"));
+        print(&utf8(b"Receiver address: "));
+        print(&signer::address_of(receiver));
         let token_address = token::create_token_address(
             &signer::address_of(receiver),
             &collection_name,
             &token_name
         );
+        print(&collection_name);
+        print(&token_name);
+        print(&token_address);
+
         print(&exists<PositionNFT>(token_address));
     }
 
